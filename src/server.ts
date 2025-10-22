@@ -11,6 +11,7 @@ import type { CorsOptions } from "cors";
 /** Custom modules */
 import config from "@/config";
 import limiter from "@/lib/express_rate_limit";
+import { connectToDatabase, disconnectFromDatabase } from "@/lib/mongoose";
 
 /** Router */
 import v1Routes from "@/routes/v1";
@@ -52,6 +53,9 @@ app.use(limiter); /* Rate limit middleware to prevent excessive requests and enh
  */
 (async () => {
   try {
+    /** Initial database */
+    await connectToDatabase();
+
     /** Initial routes */
     app.use("/api/v1", v1Routes);
 
@@ -78,6 +82,7 @@ app.use(limiter); /* Rate limit middleware to prevent excessive requests and enh
  */
 const handleServerShutdown = async () => {
   try {
+    await disconnectFromDatabase();
     console.log("Server SHUTDOWN");
     process.exit(0);
   } catch (err) {
