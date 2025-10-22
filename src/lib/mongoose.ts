@@ -8,6 +8,7 @@ import type { ConnectOptions } from "mongoose";
 import config from "@/config";
 import { logger } from "@/lib/winston";
 
+/** Client options object */
 const clientOptions: ConnectOptions = {
   dbName: "pixdotpms",
   appName: "Pixdot PMS",
