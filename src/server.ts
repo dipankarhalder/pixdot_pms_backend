@@ -12,6 +12,7 @@ import type { CorsOptions } from "cors";
 import config from "@/config";
 import limiter from "@/lib/express_rate_limit";
 import { connectToDatabase, disconnectFromDatabase } from "@/lib/mongoose";
+import { logger } from "@/lib/winston";
 
 /** Router */
 import v1Routes from "@/routes/v1";
@@ -26,6 +27,7 @@ const corsOptions: CorsOptions = {
       callback(null, true);
     } else {
       callback(new Error(`CORS error: ${origin} is not allowed by CORS`), false);
+      logger.warn(`CORS error: ${origin} is not allowed by CORS`);
     }
   },
 };
@@ -61,10 +63,10 @@ app.use(limiter); /* Rate limit middleware to prevent excessive requests and enh
 
     /** Run the server */
     app.listen(config.PORT, () => {
-      console.log(`Server running on http://localhost:${config.PORT}`);
+      logger.info(`Server running: http://localhost:${config.PORT}`);
     });
   } catch (err) {
-    console.log("Failed to start the server", err);
+    logger.error("Failed to start the server", err);
 
     if (config.NODE_ENV === "production") {
       process.exit(1);
@@ -83,10 +85,10 @@ app.use(limiter); /* Rate limit middleware to prevent excessive requests and enh
 const handleServerShutdown = async () => {
   try {
     await disconnectFromDatabase();
-    console.log("Server SHUTDOWN");
+    logger.warn("Server SHUTDOWN");
     process.exit(0);
   } catch (err) {
-    console.log("Error during server shutdown", err);
+    logger.error("Error during server shutdown", err);
   }
 };
 
