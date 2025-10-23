@@ -1,5 +1,6 @@
 /** Node modules */
 import { Schema, model } from "mongoose";
+import bcrypt from "bcrypt";
 
 export interface IUser {
   username: string;
@@ -23,24 +24,24 @@ const userSchema = new Schema<IUser>(
   {
     username: {
       type: String,
-      required: [true, "Username is required"],
+      require: [true, "Username is required"],
       maxLength: [20, "Username must be less then 20 characters"],
       unique: [true, "Username must be unique"],
     },
     email: {
       type: String,
-      required: [true, "Email is required"],
+      require: [true, "Email is required"],
       maxLength: [20, "Email must be less then 50 characters"],
       unique: [true, "Email must be unique"],
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
+      require: [true, "Password is required"],
       select: false,
     },
     role: {
       type: String,
-      required: [true, "Role is required"],
+      require: [true, "Role is required"],
       enum: {
         values: ["admin", "user"],
         message: "{VALUE} is not supported",
@@ -86,5 +87,16 @@ const userSchema = new Schema<IUser>(
     timestamps: true,
   },
 );
+
+/** Hasing the user password */
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+    return;
+  }
+
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
 
 export default model<IUser>("User", userSchema);
