@@ -72,7 +72,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
       error: err,
     });
 
-    logger.error("Error during user registration", err);
+    logger.error("Error during user login", err);
   }
 };
 
