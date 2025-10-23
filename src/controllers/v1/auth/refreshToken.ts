@@ -2,9 +2,8 @@
 import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 
 /** Custom modules */
-import config from "@/config";
 import { logger } from "@/lib/winston";
-import { verifyAccessToken, verifyRefreshToken, generateAccessToken, generateRefreshToken } from "@/lib/jwt";
+import { verifyRefreshToken, generateAccessToken } from "@/lib/jwt";
 
 /** Models */
 import Token from "@/models/token";
