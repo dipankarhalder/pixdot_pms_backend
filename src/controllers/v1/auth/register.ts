@@ -27,6 +27,14 @@ const register = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
+  const userExists = await User.exists({ email });
+  if (userExists) {
+    res.status(400).json({
+      message: "User already exist",
+    });
+    return;
+  }
+
   try {
     const username = genUsername();
 

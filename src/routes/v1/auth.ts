@@ -4,11 +4,10 @@ import { body } from "express-validator";
 
 /** Controllers */
 import register from "@/controllers/v1/auth/register";
+import login from "@/controllers/v1/auth/login";
 
 /** Middlewares */
 import validationError from "@/middlewares/validationError";
-
-/** Models */
 
 const router = Router();
 
@@ -25,5 +24,7 @@ router.post(
   validationError,
   register,
 );
+
+router.post("/login", login);
 
 export default router;
