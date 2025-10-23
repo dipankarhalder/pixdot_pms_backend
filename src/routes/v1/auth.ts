@@ -1,10 +1,11 @@
 /** Node modules */
 import { Router } from "express";
-import { body } from "express-validator";
+import { body, cookie } from "express-validator";
 
 /** Controllers */
 import register from "@/controllers/v1/auth/register";
 import login from "@/controllers/v1/auth/login";
+import refreshToken from "@/controllers/v1/auth/refreshToken";
 
 /** Middlewares */
 import validationError from "@/middlewares/validationError";
@@ -26,5 +27,6 @@ router.post(
 );
 
 router.post("/login", login);
+router.post("/refresh-token", cookie("refreshToken"), refreshToken);
 
 export default router;
